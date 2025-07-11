@@ -1,34 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:lingua_chat/screens/home_screen.dart';
-import 'package:lingua_chat/screens/register_screen.dart'; // Yeni ekran
-import 'package:lingua_chat/services/auth_service.dart'; // Servisimiz
+import 'package:lingua_chat/services/auth_service.dart'; // Oluşturduğumuz servis
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final AuthService _authService = AuthService();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
 
-  void _login() async {
+  void _register() async {
     setState(() {
       _isLoading = true;
     });
 
     try {
-      final userCredential = await _authService.signIn(
+      final userCredential = await _authService.signUp(
         _emailController.text.trim(),
         _passwordController.text.trim(),
       );
 
       if (userCredential != null && mounted) {
-        // Giriş başarılıysa ana ekrana yönlendir
+        // Kayıt başarılıysa direkt ana ekrana yönlendir
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const HomeScreen()),
@@ -37,7 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } catch (e) {
       // Hata mesajını kullanıcıya göster
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Giriş başarısız: Kullanıcı adı veya şifre hatalı.')),
+        SnackBar(content: Text('Kayıt başarısız: ${e.toString()}')),
       );
     } finally {
       if (mounted) {
@@ -52,6 +51,10 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: const Text('Register'),
+        backgroundColor: Colors.teal,
+      ),
       body: Center(
         child: SingleChildScrollView( // Klavye açıldığında taşmayı önler
           padding: const EdgeInsets.all(24.0),
@@ -60,10 +63,10 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               const Text(
-                'LinguaChat',
+                'Create Account',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 45.0,
+                  fontSize: 35.0,
                   fontWeight: FontWeight.w900,
                   color: Colors.teal,
                 ),
@@ -102,17 +105,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     borderRadius: BorderRadius.circular(32.0),
                   ),
                 ),
-                onPressed: _login,
-                child: const Text('Log In'),
+                onPressed: _register,
+                child: const Text('Register'),
               ),
               TextButton(
-                child: const Text('Don\'t have an account? Register'),
+                child: const Text('Already have an account? Log In'),
                 onPressed: () {
-                  // Kayıt olma ekranına yönlendir
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const RegisterScreen()),
-                  );
+                  Navigator.pop(context); // Giriş ekranına geri dön
                 },
               ),
             ],

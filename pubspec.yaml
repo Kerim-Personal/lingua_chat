@@ -12,7 +12,10 @@ dependencies:
 
   cupertino_icons: ^1.0.8
 
-  firebase_core: ^2.27.0   # <<< Bu satırı ekle
+  # Firebase için gerekli paketler
+  firebase_core: ^2.27.0
+  firebase_auth: ^4.17.8      # <-- YENİ EKLENDİ (Kullanıcı kimlik doğrulama)
+  cloud_firestore: ^4.15.8   # <-- YENİ EKLENDİ (Veritabanı ve sohbet)
 
 dev_dependencies:
   flutter_test:
